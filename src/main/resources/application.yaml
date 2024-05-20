@@ -7,3 +7,12 @@ spring:
     url: jdbc:mysql://127.0.0.1:3306/sbp
     username: sbpadmin
     password: Te8XxeaGq34Z43M
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        highlight_sql: true
+logging:
+  level:
+    org.hibernate.orm.jdbc.bind: trace
