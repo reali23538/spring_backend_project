@@ -1,5 +1,8 @@
 package com.seed.sbp.todo.web;
 
+import com.seed.sbp.common.response.CommonResult;
+import com.seed.sbp.common.response.CommonResultCode;
+import com.seed.sbp.common.response.ResponseProvider;
 import com.seed.sbp.todo.domain.TodoDto;
 import com.seed.sbp.todo.service.TodoService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,7 +16,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +37,7 @@ public class TodoController {
     })
     @ApiResponse(responseCode = "200", description = "리스트 조회 성공", content = @Content(schema = @Schema(implementation = TodoDto.TodoPage.class)))
     @GetMapping("/todos")
-    public ResponseEntity<TodoDto.TodoPage> getTodoPage(
+    public ResponseEntity<CommonResult<TodoDto.TodoPage>> getTodoPage(
         @RequestParam(value = "currentPage", required = false, defaultValue = "1") int currentPage,
         @RequestParam(value = "completed", required = false, defaultValue = "false") Boolean completed
     ) {
@@ -44,7 +46,7 @@ public class TodoController {
         search.setOrderBy("todoSeq");
         search.setCompleted(completed);
 
-        return ResponseEntity.ok(todoService.getTodoPage(search));
+        return ResponseProvider.ok(todoService.getTodoPage(search));
     }
 
     // 상세
@@ -54,14 +56,14 @@ public class TodoController {
             @ApiResponse(responseCode = "204", description = "내역 없음", content = @Content(schema = @Schema(hidden = true)))
     })
     @GetMapping("/todos/{todoSeq}")
-    public ResponseEntity<TodoDto.Todo> getTodo(
+    public ResponseEntity<CommonResult<TodoDto.Todo>> getTodo(
             @Parameter(name = "todoSeq", description = "할일 seq", in = ParameterIn.PATH)
             @PathVariable(name = "todoSeq") Long todoSeq
     ) {
         try {
-            return ResponseEntity.ok(todoService.getTodo(todoSeq));
+            return ResponseProvider.ok(todoService.getTodo(todoSeq));
         } catch (Exception e) {
-            return ResponseEntity.noContent().build();
+            return ResponseProvider.fail(CommonResultCode.COMMON_NO_CONTENT);
         }
     }
 
@@ -72,16 +74,15 @@ public class TodoController {
             @ApiResponse(responseCode = "400", description = "잘못된 요청으로 인한 실패", content = @Content(schema = @Schema(hidden = true)))
     })
     @PostMapping("/todos")
-    public ResponseEntity<TodoDto.Todo> add(@RequestBody @Valid TodoDto.Todo todo, BindingResult bindingResult) {
+    public ResponseEntity<CommonResult<TodoDto.Todo>> add(@RequestBody @Valid TodoDto.Todo todo, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            // todo bindingResult.getAllErrors() 처리 필요
-            return ResponseEntity.badRequest().build();
+            return ResponseProvider.getResponseEntity(CommonResultCode.COMMON_INVALID_PARAMS, bindingResult.getAllErrors());
         }
 
         try {
-            return new ResponseEntity(todoService.add(todo), HttpStatus.CREATED);
+            return ResponseProvider.getResponseEntity(todoService.add(todo), CommonResultCode.SUCCESS_CREATE);
         } catch (ParseException e) {
-            return ResponseEntity.badRequest().build();
+            return ResponseProvider.fail(CommonResultCode.COMMON_INVALID_PARAMS);
         }
     }
 
@@ -92,15 +93,15 @@ public class TodoController {
             @ApiResponse(responseCode = "204", description = "컨텐츠 없음", content = @Content(schema = @Schema(hidden = true)))
     })
     @PutMapping("/todos/{todoSeq}")
-    public ResponseEntity<TodoDto.Todo> modify(
+    public ResponseEntity<CommonResult<TodoDto.Todo>> modify(
             @Parameter(name = "todoSeq", description = "할일 seq", in = ParameterIn.PATH)
             @PathVariable(name = "todoSeq") Long todoSeq,
             @RequestBody TodoDto.Todo todo
     ) {
         try {
-            return ResponseEntity.ok(todoService.modify(todo));
+            return ResponseProvider.ok(todoService.modify(todo));
         } catch (Exception e) {
-            return ResponseEntity.noContent().build();
+            return ResponseProvider.fail(CommonResultCode.COMMON_NO_CONTENT);
         }
     }
 
@@ -108,12 +109,12 @@ public class TodoController {
     @Operation(summary = "할일 삭제", description = "할일을 삭제하는 API 입니다.")
     @ApiResponse(responseCode = "200", description = "삭제 성공", content = @Content(schema = @Schema(hidden = true)))
     @DeleteMapping("/todos/{todoSeq}")
-    public ResponseEntity<?> remove(
+    public ResponseEntity<CommonResult<Object>> remove(
             @Parameter(name = "todoSeq", description = "할일 seq", in = ParameterIn.PATH)
             @PathVariable(name = "todoSeq") Long todoSeq
     ) {
         todoService.remove(todoSeq);
-        return ResponseEntity.ok().build();
+        return ResponseProvider.ok();
     }
 
 }
