@@ -11,9 +11,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
@@ -70,7 +72,12 @@ public class TodoController {
             @ApiResponse(responseCode = "400", description = "잘못된 요청으로 인한 실패", content = @Content(schema = @Schema(hidden = true)))
     })
     @PostMapping("/todos")
-    public ResponseEntity<TodoDto.Todo> add(@RequestBody TodoDto.Todo todo) {
+    public ResponseEntity<TodoDto.Todo> add(@RequestBody @Valid TodoDto.Todo todo, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            // todo bindingResult.getAllErrors() 처리 필요
+            return ResponseEntity.badRequest().build();
+        }
+
         try {
             return new ResponseEntity(todoService.add(todo), HttpStatus.CREATED);
         } catch (ParseException e) {
