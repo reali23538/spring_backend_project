@@ -1,5 +1,6 @@
 package com.seed.sbp.todo.service;
 
+import com.seed.sbp.common.exception.NoContentException;
 import com.seed.sbp.todo.domain.Todo;
 import com.seed.sbp.todo.domain.TodoDto;
 import com.seed.sbp.todo.repository.TodoRepository;
@@ -38,7 +39,7 @@ public class TodoService {
     }
 
     // 상세
-    public TodoDto.Todo getTodo(Long todoSeq) throws Exception {
+    public TodoDto.Todo getTodo(Long todoSeq) throws NoContentException {
         return todoRepository.findById(todoSeq)
                 .map(todo -> TodoDto.Todo.builder()
                         .todoSeq(todo.getTodoSeq())
@@ -46,7 +47,7 @@ public class TodoService {
                         .completed(todo.getCompleted())
                         .regDate(todo.getStrRegDate())
                         .build()
-                ).orElseThrow(() -> new Exception("등록되지않은 할일 입니다."));
+                ).orElseThrow(() -> new NoContentException());
     }
 
     // 등록

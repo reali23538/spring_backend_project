@@ -1,5 +1,6 @@
 package com.seed.sbp.todo.web;
 
+import com.seed.sbp.common.exception.NoContentException;
 import com.seed.sbp.common.response.CommonResult;
 import com.seed.sbp.common.response.CommonResultCode;
 import com.seed.sbp.common.response.ResponseProvider;
@@ -62,7 +63,7 @@ public class TodoController {
     ) {
         try {
             return ResponseProvider.ok(todoService.getTodo(todoSeq));
-        } catch (Exception e) {
+        } catch (NoContentException nce) {
             return ResponseProvider.fail(CommonResultCode.COMMON_NO_CONTENT);
         }
     }
