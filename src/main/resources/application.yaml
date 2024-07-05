@@ -20,6 +20,13 @@ spring:
 logging:
   level:
     org.hibernate.orm.jdbc.bind: trace
+oauth2:
+  google:
+    client-id: 발급받은client-id입력
+    client-secret: 발급받은client-secret입력
+    redirect-uri: http://localhost:8081/auth/google
+    authorization-server-uri: https://oauth2.googleapis.com/token
+    resource-server-uri: https://www.googleapis.com/oauth2/v2/userinfo
 
 ---
 
@@ -41,3 +48,10 @@ spring:
 logging:
   level:
     org.hibernate.orm.jdbc.bind: trace
+oauth2:
+  google:
+    client-id: 발급받은client-id입력
+    client-secret: 발급받은client-secret입력
+    redirect-uri: http://localhost:8081/auth/google
+    authorization-server-uri: https://oauth2.googleapis.com/token
+    resource-server-uri: https://www.googleapis.com/oauth2/v2/userinfo
