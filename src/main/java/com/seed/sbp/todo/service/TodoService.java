@@ -1,6 +1,7 @@
 package com.seed.sbp.todo.service;
 
 import com.seed.sbp.common.exception.NoContentException;
+import com.seed.sbp.common.response.CommonResultCode;
 import com.seed.sbp.todo.domain.Todo;
 import com.seed.sbp.todo.domain.TodoDto;
 import com.seed.sbp.todo.repository.TodoRepository;
@@ -47,7 +48,7 @@ public class TodoService {
                         .completed(todo.getCompleted())
                         .regDate(todo.getStrRegDate())
                         .build()
-                ).orElseThrow(() -> new NoContentException());
+                ).orElseThrow(() -> new NoContentException(CommonResultCode.COMMON_NO_CONTENT));
     }
 
     // 등록
