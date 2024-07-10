@@ -17,12 +17,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 
+@Slf4j
 @Tag(name = "Todo API", description = "Todo API 입니다.")
 @RestController
 @RequiredArgsConstructor
@@ -64,6 +66,13 @@ public class TodoController {
         try {
             return ResponseProvider.ok(todoService.getTodo(todoSeq));
         } catch (NoContentException nce) {
+            log.trace("trace!");
+            log.debug("debug!");
+            log.info("info!");
+            log.warn("warn!");
+            log.error("error!");
+
+            log.info("getTodo >>> NoContentException : {}", nce.getMessage());
             return ResponseProvider.fail(CommonResultCode.COMMON_NO_CONTENT);
         }
     }

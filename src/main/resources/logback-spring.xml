@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+    <!-- property -->
+    <property name="CONSOLE_LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %magenta([%thread]) %highlight([%-3level]) %logger{30} - %msg %n" />
+    <property name="LOG_FILE_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%-3level] %logger{30} - %msg %n" />
+    <property name="LOG_FILE_PATH" value="/home/reali/logs" />
+
+    <!-- ConsoleAppender 설정 -->
+    <appender name="CONSOLE_LOG" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <Pattern>${CONSOLE_LOG_PATTERN}</Pattern>
+        </encoder>
+    </appender>
+    <!-- RollingFileAppender 설정 -->
+    <appender name="LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>${LOG_FILE_PATTERN}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_FILE_PATH}/application.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>1MB</maxFileSize>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <!-- profiles 별 설정 -->
+    <springProfile name="local">
+        <logger name="com.seed.sbp" level="DEBUG">
+            <appender-ref ref="CONSOLE_LOG"/>
+            <appender-ref ref="LOG_FILE"/>
+        </logger>
+        <root level="INFO">
+            <appender-ref ref="CONSOLE_LOG"/>
+            <appender-ref ref="LOG_FILE"/>
+        </root>
+    </springProfile>
+    <springProfile name="dev|qa">
+        <logger name="com.seed.sbp" level="INFO">
+            <appender-ref ref="CONSOLE_LOG"/>
+            <appender-ref ref="LOG_FILE"/>
+        </logger>
+        <root level="INFO">
+            <appender-ref ref="CONSOLE_LOG"/>
+            <appender-ref ref="LOG_FILE"/>
+        </root>
+    </springProfile>
+</configuration>
