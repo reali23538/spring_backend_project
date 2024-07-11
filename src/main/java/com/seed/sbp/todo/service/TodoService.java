@@ -6,6 +6,7 @@ import com.seed.sbp.todo.domain.Todo;
 import com.seed.sbp.todo.domain.TodoDto;
 import com.seed.sbp.todo.repository.TodoRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -19,18 +20,15 @@ public class TodoService {
 
     private final TodoRepository todoRepository;
 
+    private final ModelMapper modelMapper;
+
     // 리스트(페이징)
     public TodoDto.TodoPage getTodoPage(TodoDto.TodoSearch search) {
         PageRequest pageRequest = PageRequest.of(search.getCurrentPage(), search.getLimit(), search.getSortType(), search.getOrderBy());
         Page<Todo> todoPage = todoRepository.findAllByCompleted(search.getCompleted(), pageRequest);
 
-        List<TodoDto.Todo> todos = todoPage.map(todo -> TodoDto.Todo.builder()
-                .todoSeq(todo.getTodoSeq())
-                .title(todo.getTitle())
-                .completed(todo.getCompleted())
-                .regDate(todo.getStrRegDate())
-                .build()
-        ).getContent();
+        List<TodoDto.Todo> todos = todoPage.map(todo ->
+                modelMapper.map(todo, TodoDto.Todo.class)).getContent();
 
         return TodoDto.TodoPage.builder()
                 .todos(todos)
@@ -42,13 +40,8 @@ public class TodoService {
     // 상세
     public TodoDto.Todo getTodo(Long todoSeq) throws NoContentException {
         return todoRepository.findById(todoSeq)
-                .map(todo -> TodoDto.Todo.builder()
-                        .todoSeq(todo.getTodoSeq())
-                        .title(todo.getTitle())
-                        .completed(todo.getCompleted())
-                        .regDate(todo.getStrRegDate())
-                        .build()
-                ).orElseThrow(() -> new NoContentException(CommonResultCode.COMMON_NO_CONTENT));
+                .map(todo -> modelMapper.map(todo, TodoDto.Todo.class))
+                .orElseThrow(() -> new NoContentException(CommonResultCode.COMMON_NO_CONTENT));
     }
 
     // 등록
@@ -59,12 +52,7 @@ public class TodoService {
         todo.setRegDate(t.getRegDate());
 
         Todo savedTodo = todoRepository.save(todo);
-        return TodoDto.Todo.builder()
-                .todoSeq(savedTodo.getTodoSeq())
-                .title(savedTodo.getTitle())
-                .completed(savedTodo.getCompleted())
-                .regDate(savedTodo.getStrRegDate())
-                .build();
+        return modelMapper.map(savedTodo, TodoDto.Todo.class);
     }
 
     // 수정
@@ -75,12 +63,7 @@ public class TodoService {
         savedTodo.setCompleted(todo.getCompleted());
 
         Todo modifiedTodo = todoRepository.save(savedTodo);
-        return TodoDto.Todo.builder()
-                .todoSeq(modifiedTodo.getTodoSeq())
-                .title(modifiedTodo.getTitle())
-                .completed(modifiedTodo.getCompleted())
-                .regDate(modifiedTodo.getStrRegDate())
-                .build();
+        return modelMapper.map(modifiedTodo, TodoDto.Todo.class);
     }
 
     // 삭제

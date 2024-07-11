@@ -31,7 +31,6 @@ public class TodoDto {
         private Integer rowCntPerPage;
     }
 
-    @Builder
     @Getter
     @Setter
     public static class Todo {
