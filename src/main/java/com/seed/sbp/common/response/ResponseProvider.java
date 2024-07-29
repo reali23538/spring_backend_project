@@ -46,15 +46,21 @@ public class ResponseProvider {
 		CommonResult<T> result = new CommonResult<>(t, resultCode);
 		
 		// httpStatus 셋팅
-		HttpStatus httpStatus = HttpStatus.OK;
-		if ( CommonResultCode.SUCCESS_CREATE  == resultCode ) {
+		HttpStatus httpStatus;
+		if ( CommonResultCode.SUCCESS == resultCode ) {
+			httpStatus = HttpStatus.OK;
+		} else if ( CommonResultCode.SUCCESS_CREATE  == resultCode ) {
 			httpStatus = HttpStatus.CREATED;
-		} else if ( CommonResultCode.COMMON_INVALID_PARAMS == resultCode ) {
+		} else if (
+				CommonResultCode.COMMON_INVALID_PARAMS == resultCode
+			 || CommonResultCode.NOT_FOUND_USER == resultCode
+			 || CommonResultCode.WRONG_ID_OR_PASSWORD == resultCode
+		) {
 			httpStatus = HttpStatus.BAD_REQUEST;
 			result.setFieldErrors(fieldErrors);
 		} else if ( CommonResultCode.COMMON_NO_CONTENT == resultCode ) {
 			httpStatus = HttpStatus.NO_CONTENT;
-		} else if ( CommonResultCode.COMMON_INTERNAL_SERVER_ERROR == resultCode ) {
+		} else {
 			httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
 		return new ResponseEntity<>(result, httpStatus);

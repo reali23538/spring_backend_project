@@ -1,6 +1,6 @@
 package com.seed.sbp.todo.service;
 
-import com.seed.sbp.common.exception.NoContentException;
+import com.seed.sbp.common.exception.SbpException;
 import com.seed.sbp.common.response.CommonResultCode;
 import com.seed.sbp.todo.domain.Todo;
 import com.seed.sbp.todo.domain.TodoDto;
@@ -38,10 +38,10 @@ public class TodoService {
     }
 
     // 상세
-    public TodoDto.Todo getTodo(Long todoSeq) throws NoContentException {
+    public TodoDto.Todo getTodo(Long todoSeq) throws SbpException {
         return todoRepository.findById(todoSeq)
                 .map(todo -> modelMapper.map(todo, TodoDto.Todo.class))
-                .orElseThrow(() -> new NoContentException(CommonResultCode.COMMON_NO_CONTENT));
+                .orElseThrow(() -> new SbpException(CommonResultCode.COMMON_NO_CONTENT));
     }
 
     // 등록

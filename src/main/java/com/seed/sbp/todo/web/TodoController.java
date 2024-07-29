@@ -1,6 +1,6 @@
 package com.seed.sbp.todo.web;
 
-import com.seed.sbp.common.exception.NoContentException;
+import com.seed.sbp.common.exception.SbpException;
 import com.seed.sbp.common.response.CommonResult;
 import com.seed.sbp.common.response.CommonResultCode;
 import com.seed.sbp.common.response.ResponseProvider;
@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,7 @@ public class TodoController {
     private final TodoService todoService;
 
     // 리스트(페이징)
-    @Operation(summary = "할일 리스트", description = "페이징된 할일 리스트를 조회하는 API 입니다.")
+    @Operation(summary = "할일 리스트", description = "페이징된 할일 리스트를 조회하는 API 입니다.", security = @SecurityRequirement(name = "bearerAuth"))
     @Parameters(value = {
             @Parameter(name = "currentPage", description = "현재 페이지"),
             @Parameter(name = "completed", description = "완료여부")
@@ -65,7 +66,7 @@ public class TodoController {
     ) {
         try {
             return ResponseProvider.ok(todoService.getTodo(todoSeq));
-        } catch (NoContentException nce) {
+        } catch (SbpException nce) {
             log.trace("trace!");
             log.debug("debug!");
             log.info("info!");

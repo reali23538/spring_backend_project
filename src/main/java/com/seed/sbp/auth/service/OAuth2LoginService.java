@@ -24,7 +24,7 @@ public class OAuth2LoginService {
         // todo oAuth2 로그인 후처리
         // 등록된 유저인지 확인 > 없으면 유저 등록
         // email(필), password(선), oAuthCompany(선), name...
-        // jwt 자체 토큰 생성 (accessToken + refreshToken)
+        // jwt 자체 토큰 생성 및 refreshToken 저장 (accessToken + refreshToken)
     }
 
     private String getAccessToken(String authCode, String oAuth2Company) {
