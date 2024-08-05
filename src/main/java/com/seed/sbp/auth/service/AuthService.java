@@ -12,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -25,16 +27,27 @@ public class AuthService {
         log.debug("encrypt password >>> {}", passwordEncoder.encode(loginUser.getPassword()));
 
         // todo 아래 방법 대신. 이 부분에서 시큐리티로 인증하고 > 필터에서 DB 조회 없이 토큰으로만 체크해도 될 듯
-        // 이메일, 패스워드 체크
+        // 이메일 체크
         User user = userRepository.findByEmail(loginUser.getEmail())
                 .orElseThrow(() -> new SbpException(CommonResultCode.NOT_FOUND_USER));
+        // Lock 체크
+        if (user.getLockYn().equals("Y")) throw new SbpException(CommonResultCode.LOCKED_USER);
+        // 패스워드 체크
         if (!passwordEncoder.matches(loginUser.getPassword(), user.getPassword())) {
+            // 5회 이상 로그인 실패시 lock
+            int loginFailCnt = user.getLoginFailCnt() + 1;
+            if (loginFailCnt >= 5) user.setLockYn("Y");
+            user.setLoginFailCnt(loginFailCnt);
+            userRepository.save(user);
+
             throw new SbpException(CommonResultCode.WRONG_ID_OR_PASSWORD);
         }
 
         // 토큰 생성
         AuthDto.LoginResult loginResult = jwtProvider.createToken(user.getEmail(), user.getRoles());
         user.setRefreshToken(loginResult.getRefreshToken());
+        user.setLastLoginDate(new Date());
+        user.setLoginFailCnt(0);
         userRepository.save(user);
         return loginResult;
     }
