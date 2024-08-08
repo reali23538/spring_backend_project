@@ -23,14 +23,16 @@ public class SbpUserDetails implements UserDetails {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public String getPassword() {
-        return user.getPassword();
-    }
+    public Long getUserSeq() { return user.getUserSeq(); }
 
     @Override
     public String getUsername() {
-        return user.getNickname();
+        return user.getEmail();
+    }
+
+    @Override
+    public String getPassword() {
+        return user.getPassword();
     }
 
     @Override

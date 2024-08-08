@@ -1,9 +1,11 @@
 package com.seed.sbp.todo.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.seed.sbp.common.domain.Search;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,6 +18,8 @@ public class TodoDto {
     @Setter
     public static class TodoSearch extends Search {
         private Boolean completed = false;
+
+        private User user;
     }
 
     @Builder
@@ -48,6 +52,15 @@ public class TodoDto {
         @NotBlank(message = "등록일시를 입력해주세요.")
         @Schema(description = "등록일시 (yyyyMMddHHmm)", example = "202405282010")
         private String regDate;
+
+        @JsonIgnore
+        private User user;
+    }
+
+    @AllArgsConstructor
+    @Getter
+    public static class User {
+        private Long userSeq;
     }
 
 }

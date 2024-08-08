@@ -44,7 +44,7 @@ public class AuthService {
         }
 
         // 토큰 생성
-        AuthDto.LoginResult loginResult = jwtProvider.createToken(user.getEmail(), user.getRoles());
+        AuthDto.LoginResult loginResult = jwtProvider.createToken(user);
         user.setRefreshToken(loginResult.getRefreshToken());
         user.setLastLoginDate(new Date());
         user.setLoginFailCnt(0);
@@ -64,7 +64,7 @@ public class AuthService {
         if (!user.getRefreshToken().equals(refreshToken)) throw new SbpException(CommonResultCode.WRONG_REFRESH_TOKEN);
 
         // 토큰 생성
-        AuthDto.LoginResult loginResult = jwtProvider.createToken(user.getEmail(), user.getRoles());
+        AuthDto.LoginResult loginResult = jwtProvider.createToken(user);
         user.setRefreshToken(loginResult.getRefreshToken());
         userRepository.save(user);
         return loginResult;

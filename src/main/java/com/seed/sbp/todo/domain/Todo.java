@@ -1,6 +1,7 @@
 package com.seed.sbp.todo.domain;
 
 import com.seed.sbp.common.util.DateUtil;
+import com.seed.sbp.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,6 +22,10 @@ public class Todo {
     private String title;
 
     private Boolean completed;
+
+    @ManyToOne
+    @JoinColumn(name = "user_seq")
+    private User user;
 
     private Date regDate;
 

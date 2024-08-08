@@ -21,7 +21,8 @@ public class TodoRepositoryCustom {
 
         JPQLQuery<Todo> q = queryFactory.selectFrom(todo)
                 .where(
-                        todo.completed.eq(search.getCompleted())
+                        todo.completed.eq(search.getCompleted()),
+                        todo.user.userSeq.eq(search.getUser().getUserSeq())
                 );
         return q.fetch();
     }

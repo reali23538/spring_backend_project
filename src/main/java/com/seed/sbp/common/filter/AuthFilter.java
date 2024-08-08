@@ -33,7 +33,7 @@ public class AuthFilter extends OncePerRequestFilter {
             if (token != null && jwtProvider.validateToken(token)) {
                 // 유저 확인
                 Claims claims = jwtProvider.getClaims(token);
-                UserDetails userDetails = userDetailsService.loadUserByUsername(claims.getSubject());
+                UserDetails userDetails = userDetailsService.loadUserByUsername((String) claims.get("email"));
 
                 // 현재 request의 Security Context에 추가 (인가 성공하여 승인된 request라는 의미)
                 if (userDetails != null) {
