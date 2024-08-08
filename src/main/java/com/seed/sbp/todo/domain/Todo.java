@@ -27,6 +27,7 @@ public class Todo {
     @JoinColumn(name = "user_seq")
     private User user;
 
+    @Temporal(TemporalType.TIMESTAMP)
     private Date regDate;
 
     public String getStrRegDate() {

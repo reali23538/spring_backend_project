@@ -27,8 +27,10 @@ public class User {
 
     private String googleYn;
 
+    @Temporal(TemporalType.TIMESTAMP)
     private Date regDate;
 
+    @Temporal(TemporalType.TIMESTAMP)
     private Date lastLoginDate;
 
     private Integer loginFailCnt;
