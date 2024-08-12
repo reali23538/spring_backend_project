@@ -30,6 +30,10 @@ oauth2:
     redirect-uri: http://localhost:8081/auth/google
     authorization-server-uri: https://oauth2.googleapis.com/token
     resource-server-uri: https://www.googleapis.com/oauth2/v2/userinfo
+external-api:
+  typicode:
+    url: https://jsonplaceholder.typicode.com
+    todo-path: /todos
 
 ---
 
@@ -61,3 +65,7 @@ oauth2:
     redirect-uri: http://localhost:8081/auth/google
     authorization-server-uri: https://oauth2.googleapis.com/token
     resource-server-uri: https://www.googleapis.com/oauth2/v2/userinfo
+external-api:
+  typicode:
+    url: https://jsonplaceholder.typicode.com
+    todo-path: /todos
