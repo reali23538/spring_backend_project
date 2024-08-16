@@ -37,5 +37,14 @@ public class SwaggerConfig {
                 .pathsToMatch(paths)
                 .build();
     }
+    @Bean
+    public GroupedOpenApi commonAPI() {
+        String[] paths = {"/files"};
+
+        return GroupedOpenApi.builder()
+                .group("common")
+                .pathsToMatch(paths)
+                .build();
+    }
 
 }
