@@ -4,11 +4,19 @@ import com.seed.sbp.common.file.domain.FileInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URLEncoder;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -101,6 +109,15 @@ public class FileUtil {
             dir.mkdirs();
         }
         return dir.getPath();
+    }
+
+    public ResponseEntity<Resource> download(String path, String fileName) throws MalformedURLException, UnsupportedEncodingException {
+        String filePath = UPLOAD_ROOT_PATH + File.separator + path + File.separator + fileName;
+        Resource resource = new UrlResource(Paths.get(filePath).toUri());
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + URLEncoder.encode(fileName, "UTF-8") + "\"")
+                .body(resource);
     }
 
 }

@@ -45,7 +45,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(
                                 "/swagger-ui/**", "/v3/api-docs/**", // 스웨거
-                                "/login", "/refresh" // 로그인, 토큰 재발급은 모두 승인
+                                "/login", "/refresh", // 로그인, 토큰 재발급은 모두 승인
+                                "/files" // 파일다운로드
                         ).permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN") // /admin으로 시작하는 요청은 ADMIN 권한이 있는 유저에게만 허용
                         .requestMatchers("/todos/**").hasRole("MEMBER") // /todos 로 시작하는 요청은 MEMBER 권한이 있는 유저에게만 허용
