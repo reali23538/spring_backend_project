@@ -119,7 +119,7 @@ public class TodoController {
         todo.setUser(new TodoDto.User(userDetails.getUserSeq()));
         try {
             return ResponseProvider.ok(todoService.modify(todo));
-        } catch (Exception e) {
+        } catch (SbpException e) {
             return ResponseProvider.fail(CommonResultCode.COMMON_NO_CONTENT);
         }
     }

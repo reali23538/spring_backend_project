@@ -62,11 +62,11 @@ public class TodoService {
     }
 
     // 수정
-    public TodoDto.Todo modify(TodoDto.Todo todo) throws Exception {
+    public TodoDto.Todo modify(TodoDto.Todo todo) throws SbpException {
         User user = modelMapper.map(todo.getUser(), User.class);
 
         Todo savedTodo = todoRepository.findByTodoSeqAndUser(todo.getTodoSeq(), user)
-                .orElseThrow(() -> new Exception("등록되지않은 할일 입니다."));
+                .orElseThrow(() -> new SbpException(CommonResultCode.COMMON_NO_CONTENT));
         savedTodo.setTitle(todo.getTitle());
         savedTodo.setCompleted(todo.getCompleted());
 
