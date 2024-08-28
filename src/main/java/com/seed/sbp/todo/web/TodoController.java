@@ -46,7 +46,8 @@ public class TodoController {
     public ResponseEntity<CommonResult<TodoDto.TodoPage>> getTodoPage(
             @RequestParam(value = "currentPage", required = false, defaultValue = "1") int currentPage,
             @RequestParam(value = "completed", required = false, defaultValue = "false") Boolean completed,
-            @AuthenticationPrincipal SbpUserDetails userDetails) {
+            @AuthenticationPrincipal SbpUserDetails userDetails
+    ) {
         TodoDto.TodoSearch search = new TodoDto.TodoSearch();
         search.setCurrentPage(currentPage);
         search.setOrderBy("todoSeq");
@@ -89,8 +90,9 @@ public class TodoController {
             @ApiResponse(responseCode = "400", description = "잘못된 요청으로 인한 실패", content = @Content(schema = @Schema(hidden = true)))
     })
     @PostMapping("/todos")
-    public ResponseEntity<CommonResult<TodoDto.Todo>> add(@RequestBody @Valid TodoDto.Todo todo, BindingResult bindingResult,
-                                                          @AuthenticationPrincipal SbpUserDetails userDetails) {
+    public ResponseEntity<CommonResult<TodoDto.Todo>> add(
+            @RequestBody @Valid TodoDto.Todo todo, BindingResult bindingResult,
+            @AuthenticationPrincipal SbpUserDetails userDetails) {
         if (bindingResult.hasErrors()) {
             return ResponseProvider.getResponseEntity(CommonResultCode.COMMON_INVALID_PARAMS, bindingResult.getAllErrors());
         }
